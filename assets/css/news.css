@@ -1,0 +1,290 @@
+/* News Page Styling */
+.breadcrumb-section {
+    background-color: #f8f9fa;
+    padding: 15px 0;
+    border-bottom: 1px solid #dee2e6;
+}
+
+.breadcrumb {
+    margin-bottom: 0;
+    background-color: transparent;
+}
+
+.breadcrumb-item a {
+    color: #dc3545;
+    text-decoration: none;
+}
+
+.breadcrumb-item.active {
+    color: #6c757d;
+}
+
+.news-section {
+    background-color: #fff;
+    min-height: 70vh;
+    flex: 1 0 auto;
+}
+
+.news-title {
+    font-size: 32px;
+    font-weight: 700;
+    color: #333;
+    text-transform: uppercase;
+    margin-bottom: 50px;
+}
+
+/* News Grid */
+.news-item {
+    background-color: #fff;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+    margin-bottom: 30px;
+    cursor: pointer;
+    height: 500px; /* Cố định chiều cao card */
+    display: flex;
+    flex-direction: column;
+}
+
+.news-item:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+}
+
+.news-image {
+    width: 100%;
+    max-width: 100%;
+    object-fit: cover; /* Thay đổi từ contain sang cover */
+    border-radius: 12px 12px 0 0;
+    height: 250px; /* Tăng chiều cao hình ảnh */
+    transition: transform 0.3s ease;
+    flex-shrink: 0; /* Ngăn hình ảnh bị co lại */
+}
+
+.news-item:hover .news-image {
+    transform: scale(1.05);
+}
+
+.news-content {
+    padding: 20px;
+    flex: 1; /* Cho phép phần content mở rộng để lấp đầy không gian còn lại */
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+/* Xóa phần .news-category - không cần chữ EVO nữa */
+
+.news-title-item {
+    font-size: 16px;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 10px;
+    line-height: 1.4;
+    height: 44px; /* Cố định chiều cao cho tiêu đề (2 dòng) */
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.news-excerpt {
+    font-size: 14px;
+    color: #6c757d;
+    line-height: 1.5;
+    margin-bottom: 15px;
+    height: 63px; /* Cố định chiều cao cho mô tả (3 dòng) */
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    flex: 1; /* Cho phép mô tả mở rộng */
+}
+
+.news-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 12px;
+    color: #999;
+}
+
+.news-date {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.news-author {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+/* Pagination Styling */
+.pagination-section {
+    border-top: 1px solid #dee2e6;
+    padding-top: 30px;
+}
+
+.pagination {
+    margin-bottom: 0;
+}
+
+.pagination .page-link {
+    color: #333;
+    border: 1px solid #dee2e6;
+    padding: 8px 16px;
+    margin: 0 2px;
+    border-radius: 4px;
+    transition: all 0.3s ease;
+}
+
+.pagination .page-link:hover {
+    background-color: #dc3545;
+    border-color: #dc3545;
+    color: #fff;
+}
+
+.pagination .page-item.active .page-link {
+    background-color: #dc3545;
+    border-color: #dc3545;
+    color: #fff;
+}
+
+.pagination .page-item.disabled .page-link {
+    color: #6c757d;
+    background-color: #fff;
+    border-color: #dee2e6;
+}
+
+/* Responsive */
+@media (max-width: 576px) {
+    .news-title {
+        font-size: 24px;
+        margin-bottom: 30px;
+    }
+    
+    .news-item {
+        height: auto; /* Cho phép card tự động điều chỉnh chiều cao */
+        min-height: 450px;
+    }
+    
+    .news-image {
+        height: 250px; /* Tăng chiều cao hình ảnh cho mobile nhỏ */
+        object-fit: contain; /* Thay đổi sang contain để hiển thị đầy đủ */
+        background-color: #f8f9fa; /* Thêm background cho khoảng trống */
+    }
+    
+    .news-content {
+        padding: 15px;
+    }
+    
+    .news-title-item {
+        font-size: 15px;
+        height: auto; /* Cho phép tiêu đề tự động điều chỉnh */
+        min-height: 40px;
+    }
+    
+    .news-excerpt {
+        font-size: 13px;
+        height: auto; /* Cho phép mô tả tự động điều chỉnh */
+        min-height: 57px;
+    }
+    
+    .pagination .page-link {
+        padding: 6px 12px;
+        font-size: 14px;
+    }
+}
+
+@media (min-width: 577px) and (max-width: 767px) {
+    .news-item {
+        height: auto; /* Cho phép card tự động điều chỉnh chiều cao */
+        min-height: 460px;
+    }
+    
+    .news-image {
+        height: 260px; /* Tăng chiều cao hình ảnh cho mobile trung bình */
+        object-fit: contain; /* Hiển thị đầy đủ hình ảnh */
+        background-color: #f8f9fa;
+    }
+    
+    .news-title-item {
+        height: auto; /* Cho phép tiêu đề tự động điều chỉnh */
+        min-height: 41px;
+    }
+    
+    .news-excerpt {
+        height: auto; /* Cho phép mô tả tự động điều chỉnh */
+        min-height: 59px;
+    }
+    
+    .pagination .page-link {
+        padding: 7px 14px;
+        font-size: 14px;
+    }
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+    .news-item {
+        height: 470px; /* Chiều cao cho tablet */
+    }
+    
+    .news-image {
+        height: 220px; /* Tăng chiều cao hình ảnh cho tablet */
+        object-fit: cover;
+    }
+    
+    .news-title-item {
+        height: 42px; /* Chiều cao tiêu đề cho tablet */
+    }
+    
+    .news-excerpt {
+        height: 60px; /* Chiều cao mô tả cho tablet */
+    }
+    
+    .pagination .page-link {
+        padding: 8px 15px;
+        font-size: 15px;
+    }
+}
+
+@media (min-width: 992px) {
+    .news-item {
+        height: 500px; /* Chiều cao cho desktop */
+    }
+    
+    .news-image {
+        height: 250px; /* Tăng chiều cao hình ảnh cho desktop */
+        object-fit: cover;
+    }
+    
+    .news-title-item {
+        height: 44px; /* Chiều cao tiêu đề cho desktop */
+    }
+    
+    .news-excerpt {
+        height: 63px; /* Chiều cao mô tả cho desktop */
+    }
+    
+    .pagination .page-link {
+        padding: 8px 16px;
+        font-size: 16px;
+    }
+}
+
+html, body {
+    height: 100%;
+}
+body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+footer.footer {
+    flex-shrink: 0;
+} 

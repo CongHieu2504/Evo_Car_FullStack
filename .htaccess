@@ -1,0 +1,24 @@
+RewriteEngine on
+
+# Cho phép truy cập trực tiếp file tĩnh trong thư mục assets
+RewriteCond %{REQUEST_URI} ^/kholanh/assets/ [NC]
+RewriteRule .* - [L]
+
+# Cho phép truy cập trực tiếp file tĩnh trong thư mục Evo_Car/assets nếu có
+RewriteCond %{REQUEST_URI} ^/kholanh/Evo_Car/assets/ [NC]
+RewriteRule .* - [L]
+
+# Image resizer rules
+RewriteRule ^(media)/([0-9]{1,4})x([0-9]{1,4})x([0-9]{1,4})-(.*).(jpg|jpeg|png|gif|bmp|JPG|JPEG|PNG|GIF|BMP) resizer/timthumb.php?src=$5.$6&w=$2&h=$3&zc=$4&q=100 [L]
+RewriteRule ^(media)/(.*)/([0-9]{1,4})x([0-9]{1,4})x([0-9]{1,4})-(.*).(jpg|jpeg|png|gif|bmp|JPG|JPEG|PNG|GIF|BMP) resizer/timthumb.php?src=uploads/$2/$6.$7&w=$3&h=$4&zc=$5&q=100 [L]
+RewriteRule ^(media)/(.*)/(.*) uploads/$2/$3 [L]
+RewriteRule ^(media)/(.*)/(.*)/(.*) uploads/$2/$3/$4 [L]
+RewriteRule ^(image)/(.*) ckeditor/kcfinder/upload/images/$2 [L]
+
+# CodeIgniter routing - chỉ áp dụng cho các request không phải file/directory tồn tại
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^(.*)$ index.php/$1 [L,QSA]
+
+php_flag display_errors off
+php_value error_reporting 0

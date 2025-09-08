@@ -1,0 +1,163 @@
+/* Container toàn trang đăng ký */
+.test-drive-section {
+    padding: 60px 0;
+    font-family: 'Roboto', sans-serif;
+    color: #000;
+}
+
+/* Tiêu đề và mô tả */
+.test-drive-section h2 {
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    margin-bottom: 10px;
+}
+
+.test-drive-section p {
+    color: #555;
+    max-width: 700px;
+    margin: 0 auto 40px;
+    font-size: 16px;
+}
+
+/* Nhóm tiêu đề nhỏ */
+.test-drive-section h5 {
+    font-weight: 600;
+    text-transform: uppercase;
+    margin-bottom: 20px;
+}
+
+/* Label */
+.test-drive-section label {
+    font-weight: 500;
+    margin-bottom: 8px;
+    display: block;
+}
+
+/* Input, select, textarea */
+.test-drive-section input,
+.test-drive-section select,
+.test-drive-section textarea {
+    width: 100%;
+    padding: 10px 15px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 14px;
+    transition: 0.3s;
+}
+
+.test-drive-section input:focus,
+.test-drive-section select:focus,
+.test-drive-section textarea:focus {
+    border-color: #000;
+    outline: none;
+}
+
+.test-drive-section button[type="submit"] {
+    background-color: #000;
+    color: #fff;
+    font-weight: 600;
+    padding: 12px 0;
+    font-size: 15px;
+    border: none;
+    border-radius: 4px;
+    transition: 0.4s;
+    width: 100%; /* Chiếm toàn bộ chiều rộng */
+    display: block; /* Hiển thị dạng block để full width */
+    text-transform: uppercase;
+}
+
+.test-drive-section button[type="submit"]:hover {
+    background-color: #fff;
+    color: #c00;
+    border: 1px solid #c00;
+    transform: translateY(-2px);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .test-drive-section {
+        padding: 40px 0;
+    }
+    
+    .test-drive-section h2 {
+        font-size: 24px;
+        letter-spacing: 1px;
+    }
+    
+    .test-drive-section p {
+        font-size: 14px;
+        margin-bottom: 30px;
+    }
+    
+    .test-drive-section h5 {
+        font-size: 16px;
+        margin-bottom: 15px;
+    }
+    
+    .test-drive-section input,
+    .test-drive-section select,
+    .test-drive-section textarea {
+        padding: 8px 12px;
+        font-size: 13px;
+    }
+    
+    .test-drive-section button[type="submit"] {
+        padding: 10px 0;
+        font-size: 14px;
+    }
+}
+
+@media (max-width: 576px) {
+    .test-drive-section {
+        padding: 30px 0;
+    }
+    
+    .test-drive-section h2 {
+        font-size: 20px;
+        letter-spacing: 0.5px;
+    }
+    
+    .test-drive-section p {
+        font-size: 13px;
+        margin-bottom: 25px;
+    }
+    
+    .test-drive-section h5 {
+        font-size: 15px;
+        margin-bottom: 12px;
+    }
+    
+    .test-drive-section label {
+        font-size: 13px;
+        margin-bottom: 6px;
+    }
+    
+    .test-drive-section input,
+    .test-drive-section select,
+    .test-drive-section textarea {
+        padding: 6px 10px;
+        font-size: 12px;
+    }
+    
+    .test-drive-section button[type="submit"] {
+        padding: 8px 0;
+        font-size: 13px;
+    }
+}
+
+@media (min-width: 769px) and (max-width: 991px) {
+    .test-drive-section {
+        padding: 50px 0;
+    }
+    
+    .test-drive-section h2 {
+        font-size: 26px;
+    }
+    
+    .test-drive-section p {
+        font-size: 15px;
+        margin-bottom: 35px;
+    }
+}
+
