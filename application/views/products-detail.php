@@ -477,7 +477,9 @@
                 <!-- Ảnh chính bên phải -->
                 <div class="col-md-6">
                     <?php $mainExterior = (!empty($images) ? $images[0] : $product['image']); ?>
-                    <img src="<?= htmlspecialchars($mainExterior) ?>" alt="<?= htmlspecialchars($product['name']) ?> Exterior" class="product-image" id="mainExteriorImage">
+                    <div class="main-image-container">
+                        <img src="<?= htmlspecialchars($mainExterior) ?>" alt="<?= htmlspecialchars($product['name']) ?> Exterior" class="product-image" id="mainExteriorImage">
+                    </div>
                 </div>
             </div>
             <!-- Gallery ảnh liên quan bên dưới -->
@@ -519,7 +521,9 @@
                 <!-- Ảnh chính bên trái -->
                 <div class="col-md-6">
                     <?php $mainInterior = (!empty($interior_images) ? $interior_images[0] : $product['image']); ?>
-                    <img src="<?= htmlspecialchars($mainInterior) ?>" alt="<?= htmlspecialchars($product['name']) ?> Interior" class="product-image" id="mainInteriorImage">
+                    <div class="main-image-container">
+                        <img src="<?= htmlspecialchars($mainInterior) ?>" alt="<?= htmlspecialchars($product['name']) ?> Interior" class="product-image" id="mainInteriorImage">
+                    </div>
                 </div>
                 <!-- Thông tin nội thất bên phải -->
                 <div class="col-md-6">

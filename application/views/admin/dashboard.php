@@ -221,14 +221,14 @@
                         </div>
                     </div>
                     <div class="col-md-3">
-                        <div class="stats-card" style="background: linear-gradient(45deg, #dc3545, #c82333);">
+                        <div class="stats-card" style="background: linear-gradient(45deg, #6f42c1, #593196);">
                             <div class="d-flex justify-content-between">
                                 <div>
-                                    <h3><?php echo number_format($stats['total_orders']); ?></h3>
-                                    <p class="mb-0">Đơn hàng</p>
+                                    <h3><?php echo number_format($stats['total_stock_products']); ?></h3>
+                                    <p class="mb-0">Sản phẩm kho</p>
                                 </div>
                                 <div class="align-self-center">
-                                    <i class="fas fa-shopping-cart fa-2x"></i>
+                                    <i class="fas fa-warehouse fa-2x"></i>
                                 </div>
                             </div>
                         </div>

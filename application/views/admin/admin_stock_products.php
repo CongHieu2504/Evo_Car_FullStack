@@ -234,6 +234,45 @@
                         <button class="btn btn-outline-secondary">Print</button>
                     </div>
                 </div>
+                <!-- Stats row for stock products -->
+                <?php if (isset($stock_stats)): ?>
+                <div class="row g-3 mb-4">
+                    <div class="col-md-4">
+                        <div class="card border-0" style="background: linear-gradient(45deg,#0d6efd,#0b5ed7); color:#fff;">
+                            <div class="card-body d-flex justify-content-between align-items-center">
+                                <div>
+                                    <h3 class="mb-0"><?php echo number_format($stock_stats['total_stock']); ?></h3>
+                                    <div>Tổng sản phẩm kho</div>
+                                </div>
+                                <i class="fas fa-warehouse fa-2x"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card border-0" style="background: linear-gradient(45deg,#198754,#157347); color:#fff;">
+                            <div class="card-body d-flex justify-content-between align-items-center">
+                                <div>
+                                    <h3 class="mb-0"><?php echo number_format($stock_stats['with_price']); ?></h3>
+                                    <div>Có nhập giá</div>
+                                </div>
+                                <i class="fas fa-tags fa-2x"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card border-0" style="background: linear-gradient(45deg,#dc3545,#bb2d3b); color:#fff;">
+                            <div class="card-body d-flex justify-content-between align-items-center">
+                                <div>
+                                    <h3 class="mb-0"><?php echo number_format($stock_stats['new_7d']); ?></h3>
+                                    <div>Mới (7 ngày)</div>
+                                </div>
+                                <i class="fas fa-star fa-2x"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <?php endif; ?>
+
                 <div class="card">
                     <div class="card-header">
                         <h5 class="mb-0"><i class="fas fa-list me-2"></i>Danh sách sản phẩm kho</h5>
@@ -249,6 +288,7 @@
                                         <th>Danh mục</th>
                                         <th>Thương hiệu</th>
                                         <th>Loại</th>
+                                        <th>Giá</th>
                                         <th>Mô tả</th>
                                         <th>Ngày tạo</th>
                                         <th>Thao tác</th>
@@ -269,6 +309,8 @@
                                         <td><?php echo $product->cat_name ?: 'Chưa phân loại'; ?></td>
                                         <td><?php echo $product->brand ?: 'Chưa có'; ?></td>
                                         <td><?php echo $product->type ?: 'Chưa có'; ?></td>
+                                        <?php $p = isset($product->product_price) ? $product->product_price : (isset($product->price) ? $product->price : ''); ?>
+                                        <td><?php echo ($p !== '' && $p !== null) ? number_format($p) . ' VNĐ' : 'Chưa có'; ?></td>
                                         <td><?php echo $product->hometext ?: 'Chưa có'; ?></td>
                                         <td><?php echo date('d/m/Y', $product->created); ?></td>
                                         <td>
@@ -371,6 +413,11 @@
                         <div class="mb-3">
                             <label for="add_hometext" class="form-label">Mô tả</label>
                             <textarea class="form-control" id="add_hometext" name="hometext" rows="3"></textarea>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="add_product_price" class="form-label">Giá sản phẩm (VNĐ)</label>
+                            <input type="number" class="form-control" id="add_product_price" name="product_price" min="0" step="1" placeholder="Nhập giá, ví dụ: 150000000">
                         </div>
 
                         <div class="mb-3">

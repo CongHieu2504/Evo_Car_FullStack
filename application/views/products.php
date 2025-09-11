@@ -11,10 +11,10 @@
     <link href="https://fonts.googleapis.com" rel="preconnect">
     <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
-    <link href="assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
-    <link href="assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
-    <link href="assets/css/main.css" rel="stylesheet">
-    <link href="assets/css/products.css" rel="stylesheet">
+    <link href="<?= base_url('assets/vendor/bootstrap/css/bootstrap.min.css') ?>" rel="stylesheet">
+    <link href="<?= base_url('assets/vendor/bootstrap-icons/bootstrap-icons.css') ?>" rel="stylesheet">
+    <link href="<?= base_url('assets/css/main.css?v=' . @filemtime(FCPATH . 'assets/css/main.css')) ?>" rel="stylesheet">
+    <link href="<?= base_url('assets/css/products.css?v=' . @filemtime(FCPATH . 'assets/css/products.css')) ?>" rel="stylesheet">
     <style>
         html, body { height: 100%; }
         body { min-height: 100vh; display: flex; flex-direction: column; }
@@ -405,7 +405,8 @@
                                                 </div>
                                             <?php endif; ?>
                                             <div class="product-meta d-flex justify-content-between align-items-center mt-2">
-                                                <span class="product-date"><i class="bi bi-calendar3"></i> <?= isset($item['addtime']) ? date('d/m/Y', $item['addtime']) : date('d/m/Y') ?></span>
+                                                <?php $ts = isset($item['created']) ? $item['created'] : (isset($item['addtime']) ? $item['addtime'] : null); ?>
+                                                <span class="product-date"><i class="bi bi-calendar3"></i> <?= $ts ? date('d/m/Y', $ts) : '' ?></span>
                                             </div>
                                             <button class="btn btn-danger btn-sm mt-3 w-100">Mua ngay</button>
                                         </div>

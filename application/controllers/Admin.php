@@ -23,10 +23,15 @@ class Admin extends CI_Controller {
         }
 
         // Lấy dữ liệu thống kê từ database
+        // Lấy dữ liệu thống kê từ database
+        // Thêm tổng số sản phẩm kho
+        $this->db->from('shops_rows');
+        $total_stock_products = $this->db->count_all_results();
+
         $data = array(
             'title' => 'Admin Dashboard - Evo Car',
             'user' => $logged_in,
-            'stats' => $this->get_stats(),
+            'stats' => array_merge($this->get_stats(), ['total_stock_products' => $total_stock_products]),
             'recent_activities' => $this->get_recent_activities()
         );
 
@@ -66,47 +71,64 @@ class Admin extends CI_Controller {
     private function get_recent_activities() {
         $activities = array();
 
-        // Lấy users mới đăng ký (5 user gần nhất)
+        // 1) Users mới đăng ký
         $this->db->select('userid, username, full_name, created');
         $this->db->where('active', 1);
         $this->db->order_by('created', 'DESC');
         $this->db->limit(3);
         $recent_users = $this->db->get('users')->result_array();
-
         foreach ($recent_users as $user) {
             $activities[] = array(
                 'type' => 'user',
                 'title' => 'User mới đăng ký',
                 'description' => $user['full_name'] . ' đã đăng ký tài khoản',
+                'timestamp' => (int)$user['created'],
                 'time' => $this->time_ago($user['created']),
                 'badge' => 'primary'
             );
         }
 
-        // Lấy sản phẩm mới (5 sản phẩm gần nhất)
-        $this->db->select('id, title, addtime');
-        $this->db->where('post_type', 'product');
-        $this->db->where('status', 'publish');
-        $this->db->order_by('addtime', 'DESC');
+        // 2) Sản phẩm kho mới (shops_rows)
+        $this->db->select('id, title, created');
+        $this->db->from('shops_rows');
+        $this->db->order_by('created', 'DESC');
         $this->db->limit(3);
-        $recent_products = $this->db->get('posts')->result_array();
-
-        foreach ($recent_products as $product) {
+        $recent_stock = $this->db->get()->result_array();
+        foreach ($recent_stock as $row) {
             $activities[] = array(
-                'type' => 'product',
-                'title' => 'Sản phẩm mới',
-                'description' => $product['title'] . ' đã được thêm vào hệ thống',
-                'time' => $this->time_ago($product['addtime']),
+                'type' => 'stock_product',
+                'title' => 'Sản phẩm kho mới',
+                'description' => $row['title'] . ' đã được thêm vào kho',
+                'timestamp' => (int)$row['created'],
+                'time' => $this->time_ago($row['created']),
                 'badge' => 'success'
             );
         }
 
-        // Sắp xếp theo thời gian
+        // 3) Tin tức mới
+        $this->db->select('id, title, addtime');
+        $this->db->where('post_type', 'banner');
+        $this->db->where('is_news', 1);
+        $this->db->order_by('addtime', 'DESC');
+        $this->db->limit(3);
+        $recent_news = $this->db->get('posts')->result_array();
+        foreach ($recent_news as $news) {
+            $activities[] = array(
+                'type' => 'news',
+                'title' => 'Tin tức mới',
+                'description' => $news['title'] . ' vừa được đăng',
+                'timestamp' => (int)$news['addtime'],
+                'time' => $this->time_ago($news['addtime']),
+                'badge' => 'warning'
+            );
+        }
+
+        // Sắp xếp theo timestamp mới nhất
         usort($activities, function($a, $b) {
-            return strtotime($b['time']) - strtotime($a['time']);
+            return ($b['timestamp'] ?? 0) <=> ($a['timestamp'] ?? 0);
         });
 
-        return array_slice($activities, 0, 6); // Lấy 6 hoạt động gần nhất
+        return array_slice($activities, 0, 6);
     }
 
     private function time_ago($timestamp) {
@@ -1610,11 +1632,27 @@ class Admin extends CI_Controller {
         $products = $this->db->get()->result();
         // Lấy danh sách danh mục
         $cats = $this->db->get('shops_cat')->result();
+
+        // Thống kê tổng quan cho sản phẩm kho
+        $stock_stats = array();
+        // Tổng sản phẩm kho
+        $stock_stats['total_stock'] = $this->db->count_all('shops_rows');
+        // Sản phẩm có giá
+        $this->db->from('shops_rows');
+        $this->db->where("(product_price IS NOT NULL AND product_price != '')", null, false);
+        $stock_stats['with_price'] = $this->db->count_all_results();
+        // Sản phẩm mới 7 ngày
+        $seven_days_ago = time() - (7 * 24 * 60 * 60);
+        $this->db->from('shops_rows');
+        $this->db->where('created >=', $seven_days_ago);
+        $stock_stats['new_7d'] = $this->db->count_all_results();
+
         $data = array(
             'title' => 'Quản lý sản phẩm kho',
             'products' => $products,
             'cats' => $cats,
-            'user' => $logged_in
+            'user' => $logged_in,
+            'stock_stats' => $stock_stats
         );
         $this->load->view('admin/admin_stock_products', $data);
     }
@@ -1654,6 +1692,7 @@ class Admin extends CI_Controller {
             $html .= '<tr><td><strong>Danh mục:</strong></td><td>' . ($product->cat_name ?: 'Chưa phân loại') . '</td></tr>';
             $html .= '<tr><td><strong>Thương hiệu:</strong></td><td>' . ($product->brand ?: 'Chưa có') . '</td></tr>';
             $html .= '<tr><td><strong>Loại:</strong></td><td>' . ($product->type ?: 'Chưa có') . '</td></tr>';
+            $html .= '<tr><td><strong>Giá:</strong></td><td>' . ((isset($product->product_price) && $product->product_price !== '') ? number_format($product->product_price) . ' VNĐ' : 'Chưa có') . '</td></tr>';
             $html .= '<tr><td><strong>Ngày tạo:</strong></td><td>' . date('d/m/Y H:i', $product->created) . '</td></tr>';
             $html .= '</table>';
             $html .= '<div class="mt-3">';
@@ -1746,6 +1785,13 @@ class Admin extends CI_Controller {
             $html .= '<div class="mb-3">';
             $html .= '<label for="edit_hometext" class="form-label">Mô tả</label>';
             $html .= '<textarea class="form-control" id="edit_hometext" name="hometext" rows="3">' . htmlspecialchars($product->hometext) . '</textarea>';
+            $html .= '</div>';
+
+            // Giá sản phẩm
+            $current_price = isset($product->product_price) ? $product->product_price : (isset($product->price) ? $product->price : '');
+            $html .= '<div class="mb-3">';
+            $html .= '<label for="edit_product_price" class="form-label">Giá sản phẩm (VNĐ)</label>';
+            $html .= '<input type="number" class="form-control" id="edit_product_price" name="product_price" min="0" step="1" value="' . htmlspecialchars($current_price) . '" placeholder="Nhập giá, ví dụ: 150000000">';
             $html .= '</div>';
 
             $html .= '<div class="mb-3">';
@@ -1877,6 +1923,7 @@ class Admin extends CI_Controller {
             'type' => $this->input->post('type'),
             'hometext' => $this->input->post('hometext'),
             'homeimgfile' => $image_path,
+            'product_price' => $this->input->post('product_price') ?: null,
             'images' => $images_json,
             'interior_images' => $interior_images_json,
             'specs' => $specs_json,
@@ -2045,6 +2092,7 @@ class Admin extends CI_Controller {
             'type' => $this->input->post('type'),
             'hometext' => $this->input->post('hometext'),
             'homeimgfile' => $image_path,
+            'product_price' => $this->input->post('product_price') ?: null,
             'images' => $images_json,
             'interior_images' => $interior_images_json,
             'specs' => $specs_json,
