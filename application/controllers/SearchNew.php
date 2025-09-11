@@ -53,6 +53,18 @@ class SearchNew extends CI_Controller {
         $total_pages = ceil($total_products / $limit);
         $paged_products = array_slice($filtered, $offset, $limit);
 
+        // Tính checksum tổng thể cho danh sách sản phẩm publish để hỗ trợ realtime
+        $this->load->database();
+        $this->db->query('SET SESSION group_concat_max_len = 100000');
+        $checksum_query = $this->db->query(
+            "SELECT MD5(GROUP_CONCAT(CONCAT_WS('|', id, title, brand, type, status, price) ORDER BY id DESC SEPARATOR ';')) AS checksum\n             FROM posts\n             WHERE post_type = 'product' AND status = 'publish'"
+        );
+        $products_checksum = '';
+        if ($checksum_query && $checksum_query->num_rows() > 0) {
+            $row = $checksum_query->row();
+            $products_checksum = isset($row->checksum) ? (string)$row->checksum : '';
+        }
+
         $data = [
             'query' => $query,
             'type' => $type,
@@ -60,7 +72,8 @@ class SearchNew extends CI_Controller {
             'products' => $paged_products,
             'total_products' => $total_products,
             'total_pages' => $total_pages,
-            'current_page' => $page
+            'current_page' => $page,
+            'products_checksum' => $products_checksum
         ];
         $this->load->view('search_new', $data);
     }

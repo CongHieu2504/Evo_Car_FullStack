@@ -360,6 +360,34 @@
         </div>
     </section>
 
+    <script>
+    // Realtime polling: tự động reload trang search-new khi danh sách sản phẩm publish thay đổi
+    (function() {
+        var initialChecksum = '<?= isset($products_checksum) ? $products_checksum : '' ?>';
+        if (!initialChecksum) { return; }
+        var synced = false;
+        function check() {
+            fetch('<?= site_url('home/check_updates') ?>', { cache: 'no-store' })
+                .then(function(res){ return res.json(); })
+                .then(function(data){
+                    if (!data || !data.checksum) return;
+                    // Đồng bộ checksum lần đầu để tránh reload vòng lặp khi người dùng vào giữa lúc cập nhật
+                    if (!synced) {
+                        if (data.checksum === initialChecksum) {
+                            synced = true;
+                        }
+                        return;
+                    }
+                    if (data.checksum !== initialChecksum) {
+                        location.reload();
+                    }
+                })
+                .catch(function(){});
+        }
+        setInterval(check, 1000);
+    })();
+    </script>
+
     <!-- Footer -->
     <footer id="footer" class="footer">
         <div class="container footer-top">
