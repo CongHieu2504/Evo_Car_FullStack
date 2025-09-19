@@ -34,7 +34,13 @@ class Home extends CI_Controller {
         // Tính checksum cho danh sách sản phẩm (phát hiện thay đổi tên/giá/trạng thái...)
         $this->db->query('SET SESSION group_concat_max_len = 100000');
         $checksum_query = $this->db->query(
-            "SELECT MD5(GROUP_CONCAT(CONCAT_WS('|', id, title, brand, type, status, price) ORDER BY id DESC SEPARATOR ';')) AS checksum\n             FROM posts\n             WHERE post_type = 'product' AND status = 'publish'"
+            "SELECT MD5(GROUP_CONCAT(CONCAT_WS('|', p.id, p.title, p.description, p.image, p.brand, p.type, p.status, p.price, p.addtime, p.images, p.interior_images, p.specs, 
+                COALESCE(pm1.meta_value, ''), COALESCE(pm2.meta_value, '')
+            ) ORDER BY p.id DESC SEPARATOR ';')) AS checksum
+             FROM posts p
+             LEFT JOIN postmeta pm1 ON p.id = pm1.post_id AND pm1.meta_key = 'homeimgfile'
+             LEFT JOIN postmeta pm2 ON p.id = pm2.post_id AND pm2.meta_key = 'homeimgalt'
+             WHERE p.post_type = 'product' AND p.status = 'publish'"
         );
         $products_checksum = '';
         if ($checksum_query && $checksum_query->num_rows() > 0) {
@@ -59,7 +65,7 @@ class Home extends CI_Controller {
         // Tính checksum cho banner trang chủ (toàn bộ banner publish)
         $this->db->query('SET SESSION group_concat_max_len = 100000');
         $checksum_banner_query = $this->db->query(
-            "SELECT MD5(GROUP_CONCAT(CONCAT_WS('|', id, title, status) ORDER BY id DESC SEPARATOR ';')) AS checksum\n             FROM posts\n             WHERE post_type = 'banner' AND status = 'publish'"
+            "SELECT MD5(GROUP_CONCAT(CONCAT_WS('|', id, title, description, image, status, addtime) ORDER BY id DESC SEPARATOR ';')) AS checksum\n             FROM posts\n             WHERE post_type = 'banner' AND status = 'publish'"
         );
         $banner_checksum = '';
         if ($checksum_banner_query && $checksum_banner_query->num_rows() > 0) {
@@ -84,7 +90,13 @@ class Home extends CI_Controller {
         $this->db->query('SET SESSION group_concat_max_len = 100000');
         
         $checksum_query = $this->db->query(
-            "SELECT MD5(GROUP_CONCAT(CONCAT_WS('|', id, title, brand, type, status, price) ORDER BY id DESC SEPARATOR ';')) AS checksum\n             FROM posts\n             WHERE post_type = 'product' AND status = 'publish'"
+            "SELECT MD5(GROUP_CONCAT(CONCAT_WS('|', p.id, p.title, p.description, p.image, p.brand, p.type, p.status, p.price, p.addtime, p.images, p.interior_images, p.specs, 
+                COALESCE(pm1.meta_value, ''), COALESCE(pm2.meta_value, '')
+            ) ORDER BY p.id DESC SEPARATOR ';')) AS checksum
+             FROM posts p
+             LEFT JOIN postmeta pm1 ON p.id = pm1.post_id AND pm1.meta_key = 'homeimgfile'
+             LEFT JOIN postmeta pm2 ON p.id = pm2.post_id AND pm2.meta_key = 'homeimgalt'
+             WHERE p.post_type = 'product' AND p.status = 'publish'"
         );
         $products_checksum = '';
         if ($checksum_query && $checksum_query->num_rows() > 0) {
@@ -104,7 +116,7 @@ class Home extends CI_Controller {
         $this->load->database();
         $this->db->query('SET SESSION group_concat_max_len = 100000');
         $q = $this->db->query(
-            "SELECT MD5(GROUP_CONCAT(CONCAT_WS('|', id, title, status) ORDER BY id DESC SEPARATOR ';')) AS checksum\n             FROM posts\n             WHERE post_type = 'banner' AND status = 'publish'"
+            "SELECT MD5(GROUP_CONCAT(CONCAT_WS('|', id, title, description, image, status, addtime) ORDER BY id DESC SEPARATOR ';')) AS checksum\n             FROM posts\n             WHERE post_type = 'banner' AND status = 'publish'"
         );
         $checksum = '';
         if ($q && $q->num_rows() > 0) {
@@ -171,7 +183,7 @@ class Home extends CI_Controller {
         // Tính checksum tổng thể cho shops_rows (status=1) để realtime
         $this->db->query('SET SESSION group_concat_max_len = 100000');
         $checksum_query = $this->db->query(
-            "SELECT MD5(GROUP_CONCAT(CONCAT_WS('|', id, title, brand, type, status, IFNULL(product_price,'')) ORDER BY id DESC SEPARATOR ';')) AS checksum\n             FROM shops_rows\n             WHERE status = 1"
+            "SELECT MD5(GROUP_CONCAT(CONCAT_WS('|', id, title, listcatid, brand, type, hometext, homeimgfile, status, IFNULL(product_price,''), images, interior_images, specs, modified) ORDER BY id DESC SEPARATOR ';')) AS checksum\n             FROM shops_rows\n             WHERE status = 1"
         );
         $products_checksum = '';
         if ($checksum_query && $checksum_query->num_rows() > 0) {
@@ -199,7 +211,7 @@ class Home extends CI_Controller {
         $this->load->database();
         $this->db->query('SET SESSION group_concat_max_len = 100000');
         $checksum_query = $this->db->query(
-            "SELECT MD5(GROUP_CONCAT(CONCAT_WS('|', id, title, status) ORDER BY id DESC SEPARATOR ';')) AS checksum\n             FROM posts\n             WHERE post_type = 'banner' AND status = 'publish' AND is_news = 1"
+            "SELECT MD5(GROUP_CONCAT(CONCAT_WS('|', id, title, description, image, status, addtime) ORDER BY id DESC SEPARATOR ';')) AS checksum\n             FROM posts\n             WHERE post_type = 'banner' AND status = 'publish' AND is_news = 1"
         );
         $news_checksum = '';
         if ($checksum_query && $checksum_query->num_rows() > 0) {
@@ -215,7 +227,7 @@ class Home extends CI_Controller {
         $this->load->database();
         $this->db->query('SET SESSION group_concat_max_len = 100000');
         $q = $this->db->query(
-            "SELECT MD5(GROUP_CONCAT(CONCAT_WS('|', id, title, status) ORDER BY id DESC SEPARATOR ';')) AS checksum\n             FROM posts\n             WHERE post_type = 'banner' AND status = 'publish' AND is_news = 1"
+            "SELECT MD5(GROUP_CONCAT(CONCAT_WS('|', id, title, description, image, status, addtime) ORDER BY id DESC SEPARATOR ';')) AS checksum\n             FROM posts\n             WHERE post_type = 'banner' AND status = 'publish' AND is_news = 1"
         );
         $checksum = '';
         if ($q && $q->num_rows() > 0) {
@@ -231,7 +243,7 @@ class Home extends CI_Controller {
         $this->load->database();
         $this->db->query('SET SESSION group_concat_max_len = 100000');
         $q = $this->db->query(
-            "SELECT MD5(GROUP_CONCAT(CONCAT_WS('|', id, title, brand, type, status, IFNULL(product_price,'')) ORDER BY id DESC SEPARATOR ';')) AS checksum\n             FROM shops_rows\n             WHERE status = 1"
+            "SELECT MD5(GROUP_CONCAT(CONCAT_WS('|', id, title, listcatid, brand, type, hometext, homeimgfile, status, IFNULL(product_price,''), images, interior_images, specs, modified) ORDER BY id DESC SEPARATOR ';')) AS checksum\n             FROM shops_rows\n             WHERE status = 1"
         );
         $checksum = '';
         if ($q && $q->num_rows() > 0) {

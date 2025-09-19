@@ -313,6 +313,50 @@
     <script src="/kholanh/assets/vendor/swiper/swiper-bundle.min.js"></script>
     <script src="/kholanh/assets/js/main.js"></script>
     <script src="/kholanh/assets/js/contact.js"></script>
+    
+    <!-- Chat Popup AI -->
+    <div id="chat-popup" class="chat-popup">
+        <div class="chat-popup-header">
+            <span class="chat-popup-title">Chat với nhân viên tư vấn</span>
+            <div class="chat-popup-actions">
+                <button class="chat-clear-btn" onclick="clearChatHistory()" title="Xóa cuộc trò chuyện">
+                    <i class="bi bi-trash"></i>
+                </button>
+                <button class="chat-popup-close" onclick="toggleChatPopup()">
+                    <i class="bi bi-x"></i>
+                </button>
+            </div>
+        </div>
+        <div class="chat-popup-body">
+            <div class="chat-assistant-greeting">
+                <div class="chat-assistant-avatar">
+                    <i class="bi bi-robot"></i>
+                </div>
+                <div class="chat-assistant-message">
+                    Em ở đây để hỗ trợ cho mình ạ
+                </div>
+            </div>
+            <!-- Chat Messages Area (hidden initially) -->
+            <div class="chat-messages" id="chat-messages" style="display: none;"></div>
+            <div class="chat-input-section">
+                <textarea id="chat-message-input" class="chat-message-input" placeholder="Tin nhắn" rows="4"></textarea>
+                <div class="chat-input-footer">
+                    <span class="chat-input-hint" id="chat-hint">Hãy nhập</span>
+                    <button class="chat-send-btn" id="chat-send-btn" onclick="startChat()">
+                        <i class="bi bi-send"></i>
+                        BẮT ĐẦU TRÒ CHUYỆN
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Floating Chat Button -->
+    <div class="float-contact">
+        <button id="floating-chat-btn" class="floating-chat-btn" onclick="toggleChatPopup()" aria-label="Chat AI">
+            <i class="bi bi-chat-dots-fill"></i>
+        </button>
+    </div>
     <script>
         // Tìm kiếm header
         const searchIcon = document.querySelector('.search-icon');
