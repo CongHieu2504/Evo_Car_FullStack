@@ -256,8 +256,25 @@ if ($conn->connect_error) {
     exit();
 }
 
+// Load API key from environment or optional .env file
+$env_path = __DIR__ . '/.env';
+if (file_exists($env_path)) {
+    $lines = @file($env_path, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
+    if ($lines !== false) {
+        foreach ($lines as $line) {
+            if (strpos(ltrim($line), '#') === 0) { continue; }
+            $parts = explode('=', $line, 2);
+            if (count($parts) === 2) {
+                $k = trim($parts[0]);
+                $v = trim($parts[1]);
+                if ($k !== '' && getenv($k) === false) { putenv($k.'='.$v); }
+            }
+        }
+    }
+}
+
 // Gemini API Key
-$gemini_api_key = 'AIzaSyBB6lBHcTDQ9jzXOkcJDxeiVj4fY3QzJpg'; 
+$gemini_api_key = getenv('GOOGLE_API_KEY') ?: '';
 
 // Get POST data
 $input = json_decode(file_get_contents('php://input'), true);
